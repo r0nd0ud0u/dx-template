@@ -38,7 +38,7 @@ jobs:
       # action instead fetches a prebuilt cargo-binstall binary for the runner's
       # platform, sidestepping that entirely.
       - name: Install cargo-binstall
-        uses: cargo-bins/cargo-binstall@v1.21.0
+        uses: cargo-bins/cargo-binstall@v1.21.1
 
       - name: install dioxus
         shell: bash
