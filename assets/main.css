@@ -1,0 +1,305 @@
+/* =============================================
+   dx-template — Design System
+   (tokens defined in dx-components-theme.css)
+   ============================================= */
+
+*, *::before, *::after { box-sizing: border-box; }
+
+body {
+    background-color: var(--rpg-bg);
+    color: var(--rpg-text);
+    font-family: 'Inter', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    margin: 0;
+    min-height: 100vh;
+}
+
+h1,h2,h3,h4,h5,h6 { margin: 0; line-height: 1.25; }
+
+/* ── Page layout (flex column so footer sticks to bottom) ─────────────────── */
+.page-layout {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+.page-content { flex: 1; }
+
+/* NAVBAR */
+.navbar {
+    background: rgba(8,12,20,0.97);
+    backdrop-filter: blur(8px);
+    border-bottom: 1px solid var(--rpg-border-light);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 var(--sp-lg);
+    height: 56px;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+}
+.navbar a {
+    color: var(--rpg-text-muted);
+    text-decoration: none;
+    font-weight: 500;
+    font-size: 0.95rem;
+    position: relative;
+    transition: color var(--t-normal);
+}
+.navbar a:hover { color: var(--rpg-text); }
+.navbar a::after {
+    content: "";
+    position: absolute;
+    width: 0; height: 2px;
+    bottom: -4px; left: 0;
+    background: var(--rpg-gold);
+    transition: width var(--t-normal);
+}
+.navbar a:hover::after { width: 100%; }
+.navbar-brand { font-size:1.1rem; font-weight:700; color: var(--rpg-gold) !important; letter-spacing:.05em; }
+.navbar-user {
+    font-size:.78rem; color: var(--rpg-teal); font-weight:600;
+    padding: 2px 10px;
+    border: 1px solid var(--rpg-teal);
+    border-radius: var(--r-sm);
+}
+
+.navbar-lang-select {
+    border: 1px solid var(--primary-color-6);
+    background-color: var(--light, var(--primary-color)) var(--dark, var(--primary-color-3));
+    color: var(--secondary-color-4);
+    border-radius: 0.5rem;
+    padding: 6px 10px;
+    font-size: 0.95rem;
+    font-weight: bold;
+    cursor: pointer;
+}
+.navbar-lang-select:hover { background-color: var(--primary-color-4); }
+.navbar-lang-select:focus-visible { box-shadow: 0 0 0 2px var(--focused-border-color); }
+
+/* Mobile nav drawer trigger — hidden by default, shown ≤768px (see media query
+   below), where .navbar-desktop-group is hidden and this becomes the entry
+   point into the Sidebar drawer instead. */
+.navbar-mobile-trigger { display: none; }
+/* Base (desktop) layout — declared here, not as an inline style on the element,
+   so the ≤768px media query's `display: none` below (same specificity, later in
+   the cascade) actually wins. An inline style would always beat it regardless of
+   the media query. */
+.navbar-desktop-group {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+/* TITLES */
+.rpg-title {
+    font-size: 2rem; font-weight: 700;
+    color: var(--rpg-gold);
+    text-shadow: 0 0 20px rgba(201,162,39,.35);
+    letter-spacing: .04em;
+    margin-bottom: var(--sp-xl);
+    text-align: center;
+}
+.rpg-subtitle {
+    font-size: 1.1rem; font-weight: 600;
+    color: var(--rpg-text-muted);
+    margin-bottom: var(--sp-md);
+    text-align: center;
+}
+
+/* CARD */
+.rpg-card {
+    background: var(--rpg-bg-card);
+    border: 1px solid var(--rpg-border-light);
+    border-radius: var(--r-lg);
+    padding: var(--sp-lg) var(--sp-xl);
+    transition: border-color var(--t-normal), box-shadow var(--t-normal);
+}
+.rpg-card:hover {
+    border-color: var(--rpg-gold);
+    box-shadow: 0 0 18px rgba(201,162,39,.12);
+}
+
+/* HOME CONTAINER */
+.home-container {
+    min-height: calc(100vh - 56px);
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    padding: var(--sp-xl) var(--sp-md);
+    gap: var(--sp-xl);
+}
+
+/* Connected-users demo list (home_page.rs) — the live websocket/broadcast demo */
+.connected-users-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: var(--sp-xs);
+}
+.connected-users-list li {
+    display: flex;
+    align-items: center;
+    gap: var(--sp-sm);
+    font-size: 0.95rem;
+}
+.connected-users-dot {
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    background: var(--rpg-teal);
+    box-shadow: 0 0 6px var(--rpg-teal);
+    flex-shrink: 0;
+}
+
+/* AUTH (LOGIN) */
+.auth-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: var(--sp-xl);
+    width: 100%; max-width: 680px;
+}
+.auth-card { display:flex; flex-direction:column; gap: var(--sp-md); padding: var(--sp-xl); }
+.auth-section-title {
+    font-size:1.05rem; font-weight:600; color: var(--rpg-gold);
+    border-bottom: 1px solid var(--rpg-border-light);
+    padding-bottom: var(--sp-sm); margin-bottom: var(--sp-xs);
+}
+.rpg-answer {
+    font-size:.82rem; padding: var(--sp-xs) var(--sp-sm);
+    border-radius: var(--r-sm); min-height:1.4em;
+    color: var(--rpg-text-muted);
+}
+.rpg-answer-error {
+    font-size:.82rem; padding: var(--sp-xs) var(--sp-sm);
+    border-radius: var(--r-sm); min-height:1.4em;
+    color: var(--rpg-danger-light);
+    background: rgba(155,35,53,.12);
+}
+
+/* ANIMATIONS */
+.rotate-scale-up { -webkit-animation:rotate-scale-up .65s linear both; animation:rotate-scale-up .65s linear both; }
+@-webkit-keyframes rotate-scale-up {
+    0%  {-webkit-transform:scale(1) rotateZ(0);transform:scale(1) rotateZ(0);}
+    50% {-webkit-transform:scale(2) rotateZ(180deg);transform:scale(2) rotateZ(180deg);}
+    100%{-webkit-transform:scale(1) rotateZ(360deg);transform:scale(1) rotateZ(360deg);}
+}
+@keyframes rotate-scale-up {
+    0%  {transform:scale(1) rotateZ(0);}
+    50% {transform:scale(2) rotateZ(180deg);}
+    100%{transform:scale(1) rotateZ(360deg);}
+}
+
+/* ── App Footer ───────────────────────────────────────────────────────────── */
+.app-footer {
+    margin-top: auto;
+    padding: 20px 24px;
+    background: var(--rpg-bg-card);
+    border-top: 1px solid var(--rpg-border);
+    font-size: 0.8rem;
+    color: var(--rpg-text-muted);
+}
+.app-footer-inner {
+    max-width: 1100px;
+    margin: 0 auto;
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 16px;
+}
+.app-footer-brand {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-weight: 700;
+    font-size: 0.9rem;
+}
+.app-footer-icon { font-size: 1.1rem; }
+.app-footer-name { color: var(--rpg-gold); }
+.app-footer-version {
+    background: var(--rpg-bg-card-alt);
+    border: 1px solid var(--rpg-border);
+    border-radius: 4px;
+    padding: 1px 6px;
+    font-size: 0.72rem;
+    font-family: monospace;
+    color: var(--rpg-teal);
+}
+.app-footer-section {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+.app-footer-section-title {
+    font-weight: 700;
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--rpg-gold);
+    margin-bottom: 2px;
+}
+.app-footer-section a {
+    color: var(--rpg-text-muted);
+    text-decoration: none;
+    transition: color 0.15s;
+}
+.app-footer-section a:hover { color: var(--rpg-gold); text-decoration: underline; }
+
+/* =============================================
+   Responsive breakpoints
+   • Desktop  (≥ 769 px) : existing rules, no change
+   • Tablet   (≤ 768 px) : collapse the navbar behind a hamburger + Sidebar drawer
+   • Phone    (≤ 480 px) : further compaction
+
+   The viewport meta is already present in index.html:
+     <meta name="viewport" content="width=device-width, initial-scale=1">
+   ============================================= */
+
+/* ── Tablet & landscape phones (≤ 768 px) ──────────────────────────────── */
+@media (max-width: 768px) {
+    .navbar         { padding: 0 var(--sp-sm); height: 52px; }
+    .navbar-brand   { font-size: 1rem; }
+    /* Collapse the controls group behind a hamburger + Sidebar drawer instead
+       of cramming/wrapping them (src/components/sidebar/). */
+    .navbar-desktop-group { display: none; }
+    .navbar-mobile-trigger { display: inline-flex; }
+    /* .sidebar-trigger (the actual button rendered inside the wrapper above)
+       defaults to display: none in its own component stylesheet
+       (src/components/sidebar/style.css) and expects the caller to re-enable
+       it per breakpoint — otherwise the wrapper collapses to 0×0 since its
+       only child stays hidden. */
+    .navbar-mobile-trigger .sidebar-trigger { display: flex; }
+
+    .rpg-title      { font-size: 1.5rem; }
+    .home-container { padding: var(--sp-lg) var(--sp-sm); gap: var(--sp-lg); }
+}
+
+/* ── Android WebView fallback for the ≤768px rules above ────────────────
+   Android's WebView (used by the native mobile client, via the `wry` crate)
+   never enables "wide viewport" mode, so it ignores <meta name="viewport">
+   entirely and evaluates every `max-width` media query above against a fake
+   ~980px layout — meaning the ≤768px block above never matches there, no
+   matter how narrow the phone actually is. main.rs works around this by
+   measuring window.screen.width directly (which reports the real device
+   width regardless of the WebView's viewport-scaling bug) and toggling this
+   class on <html> — so this mirrors only the navbar toggle the Android
+   client actually needs. Real browsers (including the web build) already
+   get this correctly from the @media query, and won't ever get this class
+   since screen.width there reflects the real screen too — it's harmless,
+   redundant confirmation. */
+html.force-mobile-nav .navbar-desktop-group {
+    display: none;
+}
+html.force-mobile-nav .navbar-mobile-trigger {
+    display: inline-flex;
+}
+html.force-mobile-nav .navbar-mobile-trigger .sidebar-trigger {
+    display: flex;
+}
+
+/* ── Small phones portrait (≤ 480 px) ──────────────────────────────────── */
+@media (max-width: 480px) {
+    .rpg-title    { font-size: 1.25rem; }
+    .navbar-brand { font-size: .9rem; }
+}

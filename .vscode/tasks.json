@@ -1,0 +1,63 @@
+{
+  "version": "2.0.0",
+  "inputs": [
+    {
+      "id": "avdName",
+      "type": "promptString",
+      "description": "Android emulator AVD name (list with: emulator -list-avds)",
+      "default": "Pixel_4"
+    },
+    {
+      "id": "androidServerUrl",
+      "type": "promptString",
+      "description": "Server URL for the Android client (127.0.0.1 works via the adb reverse tunnel dev_android.sh sets up, for both the emulator and a real device; use 10.0.2.2 for the emulator or http://<lan-ip>:8080 for a real device only if adb reverse isn't available — note: those two fall back to a WebView cleartext-traffic block on character images)",
+      "default": "http://127.0.0.1:8080"
+    }
+  ],
+  "tasks": [
+    {
+      "label": "Dev: Android Emulator",
+      "type": "shell",
+      "command": "./scripts/dev_emulator.sh",
+      "args": ["${input:avdName}"],
+      "isBackground": true,
+      "problemMatcher": [],
+      "presentation": { "panel": "dedicated", "group": "dx-dev" }
+    },
+    {
+      "label": "Dev: Web Server (main)",
+      "type": "shell",
+      "command": "./scripts/dev_web.sh",
+      "isBackground": true,
+      "problemMatcher": [],
+      "presentation": { "panel": "dedicated", "group": "dx-dev" }
+    },
+    {
+      "label": "Dev: Desktop Client",
+      "type": "shell",
+      "command": "./scripts/dev_desktop.sh",
+      "isBackground": true,
+      "problemMatcher": [],
+      "presentation": { "panel": "dedicated", "group": "dx-dev" }
+    },
+    {
+      "label": "Dev: Android Client",
+      "type": "shell",
+      "command": "SERVER_URL=${input:androidServerUrl} ./scripts/dev_android.sh",
+      "isBackground": true,
+      "problemMatcher": [],
+      "presentation": { "panel": "dedicated", "group": "dx-dev" }
+    },
+    {
+      "label": "Dev: Start All (Web, Desktop, Android, Emulator)",
+      "dependsOn": [
+        "Dev: Android Emulator",
+        "Dev: Web Server (main)",
+        "Dev: Desktop Client",
+        "Dev: Android Client"
+      ],
+      "dependsOrder": "parallel",
+      "problemMatcher": []
+    }
+  ]
+}

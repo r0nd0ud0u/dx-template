@@ -1,0 +1,49 @@
+/* Sidebar — reuses .sheet/.sheet-root overlay & slide animation (sheet/style.css);
+   these rules only cover the trigger button and the drawer's own content layout. */
+
+.sidebar-trigger {
+  display: none; /* shown per-surface via a media query, e.g. .navbar-mobile-trigger */
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  padding: 0;
+  border: 1px solid var(--rpg-border-light);
+  border-radius: var(--r-sm);
+  background: transparent;
+  color: var(--rpg-text);
+  cursor: pointer;
+  transition: border-color var(--t-fast), color var(--t-fast);
+}
+
+.sidebar-trigger:hover {
+  border-color: var(--rpg-gold);
+  color: var(--rpg-gold);
+}
+
+.sidebar-trigger-icon {
+  width: 22px;
+  height: 22px;
+  fill: none;
+  stroke: currentcolor;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-width: 2;
+}
+
+.sidebar-content[data-side="left"] {
+  max-width: 280px;
+}
+
+.sidebar-nav {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-sm);
+  padding: var(--sp-md);
+}
+
+.sidebar-nav > button,
+.sidebar-nav > a {
+  width: 100%;
+  text-align: left;
+}

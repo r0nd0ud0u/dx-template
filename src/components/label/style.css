@@ -1,0 +1,8 @@
+/* Label Styles */
+.label {
+  display: flex;
+  align-items: center;
+  color: var(--secondary-color-4);
+  font-size: 1rem;
+  line-height: 1;
+}

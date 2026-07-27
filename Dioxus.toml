@@ -1,0 +1,65 @@
+[application]
+
+# App (Project) Name
+name = "dx-template"
+
+# Dioxus App Default Platform
+# web, desktop, fullstack
+default_platform = "fullstack"
+
+# resource (assets) file folder
+asset_dir = "assets"
+
+# `build` & `serve` output path
+out_dir = "bundle"
+
+[web.app]
+
+# HTML title tag content
+title = "dx-template"
+
+[web.watcher]
+
+# when watcher trigger, regenerate the `index.html`
+reload_html = true
+
+# which files or dirs will be watcher monitoring
+watch_path = ["src", "assets"]
+
+# Javascript code file
+script = []
+
+# include `assets` in web platform
+[web.resource]
+
+# Additional JavaScript files
+script = []
+
+[web.resource.dev]
+
+# Javascript code file
+# serve: [dev-server] only
+script = []
+
+[bundle]
+# Replace with your own reverse-DNS identifier and publisher before shipping.
+identifier = "io.github.r0ndoudou.dxtemplate"
+publisher = "r0ndoudou"
+resources = ["assets/*"]
+
+# Without this, `dx bundle --platform android --release` silently falls back to
+# `gradlew assembleDebug` (dioxus-cli only runs `assembleRelease` when this section
+# is present), which signs with AGP's own implicit default debug keystore
+# (~/.android/debug.keystore via AGP's own preference-directory resolution, NOT the
+# android/debug.keystore committed in this repo) and regenerates a fresh throwaway
+# key on every CI run since that path is never seeded — hence APK signatures drifting
+# between releases and Android refusing to install over the previous version.
+# Pointing this at the committed debug.keystore makes signing deterministic across
+# releases. Credentials are the standard Android debug-keystore convention (alias
+# "androiddebugkey", password "android" for both store and key) — not a real secret,
+# same reasoning as committing the keystore file itself.
+[bundle.android]
+jks_file = "android/debug.keystore"
+jks_password = "android"
+key_alias = "androiddebugkey"
+key_password = "android"

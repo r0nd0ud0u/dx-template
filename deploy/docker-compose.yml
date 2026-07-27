@@ -1,0 +1,50 @@
+name: dx-template
+
+services:
+  dx-template:
+    image: ghcr.io/r0ndoudou/dx-template:latest
+    restart: unless-stopped
+    ports:
+      - "8080:8080"
+    environment:
+      PORT: "8080"
+      IP: "0.0.0.0"
+      DATABASE_URL: "sqlite:///data/db.sqlite"
+      # This compose stack is the one authoritative deployment of the app, so it's safe
+      # for it to reset every user's is_connected status on startup.
+      IS_MAIN_SERVER: "true"
+      # LOG_LEVEL: "debug"
+    # Optional: place a .env file next to docker-compose.yml for extra runtime vars
+    env_file:
+      - path: .env
+        required: false
+    volumes:
+      # Persistent SQLite database — survives container stop/start/update
+      - db_data:/data
+    healthcheck:
+      # Check TCP port AND that the SQLite DB is fully initialized (not just a touch'd empty file)
+      test: ["CMD-SHELL", "bash -c 'exec 3<>/dev/tcp/localhost/8080' 2>/dev/null && [ $(stat -c%s //data/db.sqlite 2>/dev/null || echo 0) -gt 4096 ]"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 5s
+
+  # Lightweight SQLite web UI — not exposed to host directly.
+  # Proxied via sqlite-proxy (nginx) on port 8082 to avoid Rancher Desktop host-switch bug.
+  sqlite-web:
+    image: coleifer/sqlite-web:latest
+    restart: unless-stopped
+    ports:
+      - "8082:5000"
+    environment:
+      SQLITE_DATABASE: /data/db.sqlite
+    command: ["sqlite_web", "-H", "0.0.0.0", "-p", "5000", "-x", "/data/db.sqlite"]
+    volumes:
+      - db_data:/data
+    depends_on:
+      dx-template:
+        condition: service_healthy
+volumes:
+  # Named volume for the SQLite database file (/data/db.sqlite inside the container).
+  # Docker persists this across stop/start. To reset: docker volume rm dx-template_db_data
+  db_data:
