@@ -16,11 +16,18 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      # https://github.com/DioxusLabs/dioxus/blob/main/.github/workflows/main.yml#L167
-      - uses: awalsh128/cache-apt-pkgs-action@latest
-        with:
-          packages: libwebkit2gtk-4.1-dev libgtk-3-dev libayatana-appindicator3-dev libxdo-dev
-          version: 1.0
+      # apt mirrors occasionally 404 on a transitive dep (e.g. gst-plugins-good)
+      # right after `apt-get update` refreshes the index but before the pool
+      # file has synced to the mirror we land on; retry to ride it out.
+      - name: Install apt packages
+        run: |
+          for i in 1 2 3; do
+            sudo apt-get update && sudo apt-get install -y \
+              libwebkit2gtk-4.1-dev libgtk-3-dev libayatana-appindicator3-dev libxdo-dev \
+              && break
+            echo "apt install failed (attempt $i), retrying..."
+            sleep 5
+          done
       - name: Checkout repo
         uses: actions/checkout@v7
 
@@ -31,14 +38,8 @@ jobs:
       - name: Update rust
         run: rustup update stable
 
-      # `cargo install cargo-binstall` builds it from source and is prone to
-      # breaking on upstream dependency-resolution conflicts in its own Cargo.lock
-      # (e.g. duplicate incompatible `compact_str` versions) since `cargo install`
-      # doesn't respect the published crate's lockfile by default. The official
-      # action instead fetches a prebuilt cargo-binstall binary for the runner's
-      # platform, sidestepping that entirely.
       - name: Install cargo-binstall
-        uses: cargo-bins/cargo-binstall@v1.21.0
+        uses: cargo-bins/cargo-binstall@v1.21.1
 
       - name: install dioxus
         shell: bash
