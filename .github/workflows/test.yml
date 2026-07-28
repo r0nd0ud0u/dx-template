@@ -16,11 +16,18 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      # https://github.com/DioxusLabs/dioxus/blob/main/.github/workflows/main.yml#L167
-      - uses: awalsh128/cache-apt-pkgs-action@latest
-        with:
-          packages: libwebkit2gtk-4.1-dev libgtk-3-dev libayatana-appindicator3-dev libxdo-dev
-          version: 2.0
+      # apt mirrors occasionally 404 on a transitive dep (e.g. gst-plugins-good)
+      # right after `apt-get update` refreshes the index but before the pool
+      # file has synced to the mirror we land on; retry to ride it out.
+      - name: Install apt packages
+        run: |
+          for i in 1 2 3; do
+            sudo apt-get update && sudo apt-get install -y \
+              libwebkit2gtk-4.1-dev libgtk-3-dev libayatana-appindicator3-dev libxdo-dev \
+              && break
+            echo "apt install failed (attempt $i), retrying..."
+            sleep 5
+          done
       - name: Checkout repo
         uses: actions/checkout@v7
 
