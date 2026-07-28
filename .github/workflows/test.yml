@@ -20,7 +20,7 @@ jobs:
       - uses: awalsh128/cache-apt-pkgs-action@latest
         with:
           packages: libwebkit2gtk-4.1-dev libgtk-3-dev libayatana-appindicator3-dev libxdo-dev
-          version: 2.0
+          version: 1.0
       - name: Checkout repo
         uses: actions/checkout@v7
 
@@ -31,14 +31,8 @@ jobs:
       - name: Update rust
         run: rustup update stable
 
-      # `cargo install cargo-binstall` builds it from source and is prone to
-      # breaking on upstream dependency-resolution conflicts in its own Cargo.lock
-      # (e.g. duplicate incompatible `compact_str` versions) since `cargo install`
-      # doesn't respect the published crate's lockfile by default. The official
-      # action instead fetches a prebuilt cargo-binstall binary for the runner's
-      # platform, sidestepping that entirely.
       - name: Install cargo-binstall
-        uses: cargo-bins/cargo-binstall@v1.21.0
+        uses: cargo-bins/cargo-binstall@v1.21.1
 
       - name: install dioxus
         shell: bash
