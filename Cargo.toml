@@ -37,7 +37,7 @@ axum_session = { version = "0.20.1", optional = true }
 axum_session_auth = { version = "0.20.0", optional = true }
 axum_session_sqlx = { version = "0.10.0", features = ["sqlite"], optional = true }
 bcrypt = { version = "0.19.2", optional = true }
-rand = "0.9.2"
+rand = "0.10.2"
 dioxus-sdk-storage = "0.7.0"
 dotenv = "0.15.0"
 dioxus-i18n = "0.5.1"
